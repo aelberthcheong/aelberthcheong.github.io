@@ -202,8 +202,7 @@ function renderAboutSlide(): string {
             </p>
             
             <div class="flex flex-col gap-8 max-w-4xl w-full animate-fade-in animation-delay-600">
-                <!-- Languages Section -->
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center md:mt-16 mt-0">
                     <h3 class="text-xl sm:text-2xl font-bold mb-4">Languages</h3>
                     <div class="flex flex-wrap justify-center sm:justify-start gap-3">
                         ${Object.entries(langs).map(([lang, icon]) => `
@@ -218,8 +217,7 @@ function renderAboutSlide(): string {
                     </div>
                 </div>
 
-                <!-- Tools Section -->
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center md:mt-16 mt-0">
                     <h3 class="text-xl sm:text-2xl font-bold mb-4">Tools</h3>
                     <div class="flex flex-wrap justify-center sm:justify-end gap-3">
                         ${Object.entries(tools).map(([tool, icon]) => `
