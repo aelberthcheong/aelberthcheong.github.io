@@ -80,7 +80,6 @@ const slides: Slide[] = [
         }
     },
     {
-        // Project slide
         content: () => {
             const projects = [
                 {
@@ -152,7 +151,7 @@ const slides: Slide[] = [
         content: () => {
             return `
                 <div class="flex flex-col items-center justify-center h-full px-8 text-center">
-                    <h1 class="text-5xl sm:text-7xl font-bold text-navy mb-12">
+                    <h1 class="text-5xl sm:text-8xl font-bold text-navy mb-12">
                         Contact Me
                     </h1>
                     <div class="flex items-center gap-10">
@@ -314,9 +313,8 @@ let currentSlide = 0;
 
 function App(): void {
     const app = document.querySelector<HTMLDivElement>("#app")!;
-    document.body.style.overflow = 'hidden';
     app.innerHTML = `
-        <div class="h-dvh flex flex-col overflow-hidden">
+        <div class="h-dvh flex flex-col">
             <div class="flex-1 flex items-center justify-center p-5">
                 ${renderSlides(currentSlide)}
             </div>
