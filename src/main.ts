@@ -1,318 +1,314 @@
 import './style.css';
 
-type SlideType = 'hero' | 'about' | 'projects' | 'contact';
-type Direction = 'next' | 'prev' | 'initial';
+interface Slide {
+    content: () => string;
+}
 
-const ANIMATION_TIMING = {
-    SLIDE_TRANSITION: 500,
-    INITIAL_FADE: 800
-} as const;
-
-const SWIPE_THRESHOLD = 50;
-const SLIDE_TYPES: SlideType[] = ['hero', 'about', 'projects', 'contact'];
-
-class SlideManager {
-    private currentIndex: number = 0;
-    private isAnimating: boolean = false;
-    private touchStartX: number = 0;
-
-    constructor() {
-        this.initEventListeners();
-    }
-
-    get isAtStart(): boolean {
-        return this.currentIndex === 0;
-    }
-
-    get isAtEnd(): boolean {
-        return this.currentIndex === SLIDE_TYPES.length - 1;
-    }
-
-    render(direction: Direction = 'initial'): void {
-        const slideContainer = document.querySelector<HTMLDivElement>('#slide-container')!;
-        const indicatorsContainer = document.querySelector<HTMLDivElement>('#slide-indicators')!;
-
-        indicatorsContainer.innerHTML = this.renderSlideIndicators();
-        this.attachIndicatorListeners();
-        this.animateSlideTransition(slideContainer, direction);
-    }
-
-    nextSlide(): void {
-        if (this.isAnimating || this.isAtEnd) return;
-        this.transitionTo(this.currentIndex + 1);
-    }
-
-    prevSlide(): void {
-        if (this.isAnimating || this.isAtStart) return;
-        this.transitionTo(this.currentIndex - 1);
-    }
-
-    goTo(index: number): void {
-        if (this.isAnimating || index === this.currentIndex) return;
-        this.transitionTo(index);
-    }
-
-    private transitionTo(target: number): void {
-        const direction: Direction = target > this.currentIndex ? 'next' : 'prev';
-        this.isAnimating = true;
-        this.currentIndex = target;
-        this.render(direction);
-    }
-
-    private initEventListeners(): void {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') this.nextSlide();
-            if (e.key === 'ArrowLeft') this.prevSlide();
-        });
-
-        document.addEventListener('touchstart', (e) => {
-            this.touchStartX = e.changedTouches[0].screenX;
-        });
-
-        document.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].screenX;
-            const diff = this.touchStartX - touchEndX;
-            if (Math.abs(diff) > SWIPE_THRESHOLD) {
-                diff > 0 ? this.nextSlide() : this.prevSlide();
-            }
-        });
-    }
-
-    private animateSlideTransition(slideContainer: HTMLDivElement, direction: Direction): void {
-        if (direction !== 'initial') {
-            slideContainer.classList.add(direction === 'next' ? 'slide-out-left' : 'slide-out-right');
-        }
-
-        setTimeout(() => {
-            slideContainer.innerHTML = renderSlideContent(SLIDE_TYPES[this.currentIndex]);
-            slideContainer.classList.remove('slide-out-left', 'slide-out-right');
-            
-            if (direction === 'initial') {
-                slideContainer.classList.add('fade-in');
-                setTimeout(() => {
-                    slideContainer.classList.remove('fade-in');
-                    this.isAnimating = false;
-                }, ANIMATION_TIMING.INITIAL_FADE);
-            } else {
-                slideContainer.classList.add(direction === 'next' ? 'slide-in-right' : 'slide-in-left');
-                setTimeout(() => {
-                    slideContainer.classList.remove('slide-in-right', 'slide-in-left');
-                    this.isAnimating = false;
-                }, ANIMATION_TIMING.SLIDE_TRANSITION);
-            }
-        }, direction === 'initial' ? 0 : ANIMATION_TIMING.SLIDE_TRANSITION);
-    }
-
-    private renderSlideIndicators(): string {
-        return `
-            <div class="flex items-center gap-4 bg-white rounded-full p-2 shadow-lg">
-                <i id="prev" class="fa-solid fa-angle-left text-2xl transition-all ${
-                    this.isAtStart ? 'text-navy/30 cursor-not-allowed' : 'text-navy cursor-pointer hover:scale-125'
-                }"></i>
-                <div class="flex gap-2">
-                    ${SLIDE_TYPES.map(
-                        (_, i) =>
-                            `<div data-slide="${i}" class="w-3 h-3 rounded-full cursor-pointer transition-all hover:scale-110 ${
-                                i === this.currentIndex ? 'bg-navy scale-125' : 'bg-navy/30'
-                            }"></div>`
-                    ).join('')}
+const slides: Slide[] = [
+    {
+        // Intro slide
+        content: () => {
+            return `
+                <div class="text-center"> 
+                    <h1 class="text-5xl font-bold mb-4
+                               sm:text-8xl">
+                        Hi, I'm Aelberth
+                    </h1>
+                    <p class="text-xl mb-2 text-navy/70
+                              sm:text-3xl">
+                        A Full Stack Developer
+                    </p>
                 </div>
-                <i id="next" class="fa-solid fa-angle-right text-2xl transition-all ${
-                    this.isAtEnd ? 'text-navy/30 cursor-not-allowed' : 'text-navy cursor-pointer hover:scale-125'
-                }"></i>
-            </div>
-        `;
-    }
-
-    private attachIndicatorListeners(): void {
-        const prev = document.getElementById('prev');
-        const next = document.getElementById('next');
-
-        if (prev) {
-            prev.addEventListener('click', () => this.prevSlide());
+            `;
         }
-        if (next) {
-            next.addEventListener('click', () => this.nextSlide());
-        }
-
-        document.querySelectorAll('[data-slide]').forEach((el) => {
-            el.addEventListener('click', () => this.goTo(Number((el as HTMLElement).dataset.slide)));
-        });
-    }
-}
-
-function renderSlideContent(type: SlideType): string {
-    switch (type) {
-        case 'hero':
-            return renderHeroSlide();
-        case 'about':
-            return renderAboutSlide();
-        case 'projects':
-            return renderProjectsSlide();
-        case 'contact':
-            return renderContactSlide();
-    }
-}
-
-function renderHeroSlide(): string {
-    return `
-        <div class="h-screen flex flex-col text-center justify-center text-navy px-8">
-            <h1 class="text-4xl sm:text-6xl lg:text-8xl font-bold mb-4 animate-fade-in-up animation-delay-200">
-                Hi, I'm Aelberth.
-            </h1>
-            <p class="text-xl sm:text-3xl mb-16 animate-fade-in-up animation-delay-400">
-                A Fullstack Developer
-            </p>
-            <div class="mx-auto w-auto animate-fade-in animation-delay-600">
-                <a class="inline-block font-bold text-lg sm:text-xl text-navy bg-white rounded-full py-4 px-6 shadow-lg
-                          hover:shadow-xl hover:bg-gray-50 hover:-translate-y-1 
-                          active:translate-y-0 active:shadow-md active:bg-navy active:text-white
-                          transition-all duration-200 ease-in-out"
-                   href="/assets/Aelberth_Cheong_CV_2025.pdf" 
-                   download="Aelberth_Cheong_CV_2025.pdf">
-                    <i class="fa-solid fa-file-arrow-down me-2"></i>DOWNLOAD CV
-                </a>
-            </div>
-        </div>
-    `;
-}
-
-function renderAboutSlide(): string {
-    const langs: Record<string, string> = {
-        'Python': 'python',
-        'Go': 'golang',
-        'Javascript': 'js',
-        'HTML': 'html5',
-        'CSS': 'css3-alt'
-    };
-    const tools: Record<string, string> = {
-        'Postgres': 'deskpro',
-        'Git': 'git-alt',
-        'Docker': 'docker',
-        'Linux': 'linux',
-    };
-
-    return `
-        <div class="h-screen flex flex-col items-center justify-center text-navy px-8 py-12">
-            <h2 class="text-4xl sm:text-6xl lg:text-8xl font-bold mb-6 animate-fade-in-up animation-delay-200">
-                About Me
-            </h2>
-            <p class="text-lg sm:text-2xl mb-12 max-w-2xl text-center animate-fade-in-up animation-delay-400">
-                I like building cool things.
-            </p>
-            
-            <div class="flex flex-col gap-8 max-w-4xl w-full animate-fade-in animation-delay-600">
-                <div class="flex flex-col items-center md:mt-16 mt-0">
-                    <h3 class="text-xl sm:text-2xl font-bold mb-4">Languages</h3>
-                    <div class="flex flex-wrap justify-center sm:justify-start gap-3">
-                        ${Object.entries(langs).map(([lang, icon]) => `
-                            <span class="px-5 py-3 bg-navy text-white font-semibold rounded-xl text-sm sm:text-base select-none
-                                        shadow-[0_4px_0_0_rgb(209,213,219)]
-                                        hover:-translate-y-1 hover:shadow-[0_6px_0_0_rgb(209,213,219)]
-                                        active:translate-y-1 active:shadow-[0_2px_0_0_rgb(209,213,219)]
-                                        transition-all duration-150 ease-in-out cursor-pointer">
-                                <i class="fa-brands fa-${icon} me-2"></i>${lang}
+    },
+    {
+        // About Me slide
+        content: () => {
+            const icons: Record<string, string> = {
+                'Python': 'python',
+                'Go': 'golang',
+                'Javascript': 'js',
+                'HTML': 'html5',
+                'CSS': 'css3-alt',
+                'Git': 'git-alt',
+                'Docker': 'docker',
+                'Linux': 'linux',
+            }
+            return `
+                <div class="text-center">
+                    <h1 class="text-5xl font-bold mb-4
+                               sm:text-8xl">
+                        About Me
+                    </h1>
+                    <p class="text-xl mb-2 text-navy/70
+                               sm:text-3xl">
+                        I like building cool things.
+                    </p>
+                    <h1 class="text-xl font-semibold mt-16
+                               sm:text-3xl sm:mt-16 mb-6">
+                        Languages & Tools
+                    </h1>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        ${Object.entries(icons).map(([name, icon]) => `
+                            <span class="px-5 py-3 bg-navy text-white font-semibold rounded-xl text-sm select-none shadow-[0_4px_0_0_#d1d5db]
+                                         md:text-lg
+                                         hover:-translate-y-1 hover:shadow-[0_6px_0_0_#d1d5db]
+                                         active:translate-y-1 active:shadow-[0_2px_0_0_#d1d5db]
+                                         transition-all duration-150 ease-in-out cursor-pointer">
+                                <i class="fa-brands fa-${icon} me-2"></i>${name}
                             </span>
                         `).join('')}
                     </div>
                 </div>
+            `;
+        }
+    },
+    {
+        // Project slide
+        content: () => {
+            const projects = [
+                {
+                    name: 'Git-viewer',
+                    description:
+                        'A web-based platform where you can store, view, and share git repositories.',
+                    link: 'https://github.com/albertcheong/git-viewer'
+                },
+                {
+                    name: 'Grab',
+                    description:
+                        'A command-line tool written in Go for searching text using regular expressions.',
+                    link: 'https://github.com/albertcheong/grab'
+                },
+                {
+                    name: 'Portfolio website',
+                    description: 'This website.',
+                    link: 'https://github.com/albertcheong/albertcheong.github.io'
+                }
+            ];
 
-                <div class="flex flex-col items-center md:mt-16 mt-0">
-                    <h3 class="text-xl sm:text-2xl font-bold mb-4">Tools</h3>
-                    <div class="flex flex-wrap justify-center sm:justify-end gap-3">
-                        ${Object.entries(tools).map(([tool, icon]) => `
-                            <span class="px-5 py-3 bg-navy text-white font-semibold rounded-xl text-sm sm:text-base select-none
-                                        shadow-[0_4px_0_0_rgb(209,213,219)]
-                                        hover:-translate-y-1 hover:shadow-[0_6px_0_0_rgb(209,213,219)]
-                                        active:translate-y-1 active:shadow-[0_2px_0_0_rgb(209,213,219)]
-                                        transition-all duration-150 ease-in-out cursor-pointer">
-                                <i class="fa-brands fa-${icon} me-2"></i>${tool}
-                            </span>
-                        `).join('')}
+            return `
+                <div class="flex flex-col items-center justify-center h-full px-8">
+                    <div class="mb-12 text-center">
+                        <h1 class="text-5xl sm:text-8xl font-bold">
+                            Projects
+                        </h1>
+                        <p class="mt-4 text-xl sm:text-3xl text-navy/70">
+                            Featured projects I've worked on.
+                        </p>
+                    </div>
+                    <div class="grid gap-8 w-full max-w-6xl
+                                grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                        ${projects
+                            .map((project) => `
+                                    <div class="group flex flex-col h-full rounded-2xl bg-white p-6 shadow-md
+                                                transition-all duration-200
+                                                hover:-translate-y-1 hover:shadow-xl
+                                                focus-within:-translate-y-1 focus-within:shadow-xl">
+                                        <div class="mb-4">
+                                            <h3 class="text-xl sm:text-2xl font-bold">
+                                                ${project.name}
+                                            </h3>
+                                            <p class="mt-1 text-sm sm:text-base">
+                                                ${project.description}
+                                            </p>
+                                        </div>
+                                        <div class="flex-1"></div>
+                                        <div class="mt-4">
+                                            <a href="${project.link}"
+                                               target="_blank"
+                                               rel="noopener noreferrer"
+                                               class="inline-flex items-center gap-2 text-navy font-semibold
+                                                      hover:underline focus:outline-none
+                                                      focus-visible:ring-2 focus-visible:ring-navy/50
+                                                      rounded-md">
+                                                View project →
+                                            </a>
+                                        </div>
+                                    </div>
+                                `)
+                            .join('')}
                     </div>
                 </div>
+            `;
+        }
+    },
+    {
+        content: () => {
+            return `
+                <div class="flex flex-col items-center justify-center h-full px-8 text-center">
+                    <h1 class="text-5xl sm:text-7xl font-bold text-navy mb-12">
+                        Contact Me
+                    </h1>
+                    <div class="flex items-center gap-10">
+                        <a
+                            href="mailto:aelberth.cheong@outlook.com"
+                            aria-label="Email"
+                            class="relative inline-flex items-center justify-center
+                                text-navy text-2xl
+                                transition-all duration-200 ease-out
+                                hover:-translate-y-1 hover:rotate-[-4deg]
+                                focus:outline-none focus-visible:ring-2
+                                focus-visible:ring-navy/50
+                                after:content-[''] after:absolute after:-bottom-2
+                                after:left-1/2 after:h-1 after:w-1
+                                after:-translate-x-1/2 after:rounded-full
+                                after:bg-navy after:opacity-0
+                                after:transition-opacity after:duration-200
+                                hover:after:opacity-100">
+                            <i class="fas fa-envelope text-6xl sm:text-7xl"></i>
+                        </a>
+                        <a
+                            href="https://github.com/albertcheong"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="GitHub"
+                            class="relative inline-flex items-center justify-center
+                                text-navy text-2xl
+                                transition-all duration-200 ease-out
+                                hover:-translate-y-1 hover:rotate-[4deg]
+                                focus:outline-none focus-visible:ring-2
+                                focus-visible:ring-navy/50
+                                after:content-[''] after:absolute after:-bottom-2
+                                after:left-1/2 after:h-1 after:w-1
+                                after:-translate-x-1/2 after:rounded-full
+                                after:bg-navy after:opacity-0
+                                after:transition-opacity after:duration-200
+                                hover:after:opacity-100">
+                            <i class="fab fa-github text-6xl sm:text-7xl"></i>
+                        </a>
+                        <a
+                            href="https://linkedin.com/in/aelberthcheong"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn"
+                            class="relative inline-flex items-center justify-center
+                                text-navy text-2xl
+                                transition-all duration-200 ease-out
+                                hover:-translate-y-1 hover:rotate-[-4deg]
+                                focus:outline-none focus-visible:ring-2
+                                focus-visible:ring-navy/50
+                                after:content-[''] after:absolute after:-bottom-2
+                                after:left-1/2 after:h-1 after:w-1
+                                after:-translate-x-1/2 after:rounded-full
+                                after:bg-navy after:opacity-0
+                                after:transition-opacity after:duration-200
+                                hover:after:opacity-100">
+                            <i class="fab fa-linkedin text-6xl sm:text-7xl"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+    }
+];
+
+function goToSlide(index: number): void {
+    if (index === currentSlide) return;
+
+    const container = document.getElementById('slide-container')!;
+    const direction = index > currentSlide ? 1 : -1;
+
+    container.style.transform = `translateX(${-60 * direction}px) scale(0.95)`;
+    container.style.opacity = '0';
+
+    container.addEventListener('transitionend', function handler() {
+        container.removeEventListener('transitionend', handler);
+        
+        currentSlide = index;
+        container.innerHTML = slides[index].content();
+
+        container.style.transform = `translateX(${60 * direction}px) scale(0.95)`;
+        container.style.opacity = '0';
+
+        requestAnimationFrame(() => {
+            container.style.transform = 'translateX(0) scale(1)';
+            container.style.opacity = '1';
+        });
+
+        updateDots(index);
+        window.location.hash = `#${index}`;
+    }, { once: true });
+}
+
+function updateDots(index: number): void {
+    const dots = document.querySelectorAll<HTMLDivElement>(".dot");
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('opacity-100', i === index);
+        dot.classList.toggle('scale-120', i === index);
+
+        dot.classList.toggle('opacity-30', i !== index);
+        dot.classList.toggle('scale-100', i !== index);
+    });
+}
+
+function renderSlides(index: number): string {
+    return `
+        <div id="slide-container" class="slide w-full h-full flex items-center justify-center">
+            ${slides[index].content()}
+        </div>
+    `;
+}
+
+function renderDots(): string {
+    return `
+        <div class=" flex justify-center p-8 z-50">
+            <div class="rounded-full bg-white p-3.5 flex gap-2.5 shadow-lg">
+                ${slides.map((_, i) => `
+                    <div data-index="${i}" 
+                         class="dot w-3 h-3 rounded-full bg-navy cursor-pointer
+                                hover:scale-110 transition-all duration-300
+                                ${i === 0 ? 'opacity-100' : 'opacity-30'}">
+                    </div>
+                `).join('')}
             </div>
         </div>
     `;
 }
 
-interface Project {
-    name: string;
-    description: string;
-    link: string;
+function setupEventListeners(): void {
+    const dots = document.querySelectorAll<HTMLDivElement>(".dot");
+    dots.forEach((dot, i) => {
+        dot.addEventListener("click", (e) => {
+            e.preventDefault();
+            goToSlide(i);
+        });
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") {
+            if (currentSlide >= slides.length - 1) return;
+            goToSlide(currentSlide + 1);
+        } 
+        else if (e.key === "ArrowLeft") {
+            if (currentSlide <= 0) return;
+            goToSlide(currentSlide - 1);
+        }
+    });
+
+    const hash = window.location.hash;
+    if (hash) {
+        const index = parseInt(hash.replace('#', ''), 10);
+        if (!isNaN(index) && index >= 0 && index < slides.length) {
+            goToSlide(index);
+        }
+    }
 }
 
-function renderProjectsSlide(): string {
-    const projects: Project[] = [
-        { name: 'Git-viewer', description: 'A web-based platform where you can store, view, and share git repositories.', link: 'https://github.com/albertcheong/git-viewer' },
-        { name: 'Grab', description: 'A command-line tool written in Go for searching text by lines that matches a regular expression.', link: 'https://github.com/albertcheong/grab' },
-        { name: 'Portfolio website', description: 'My personal portfolio website showcasing my projects and skills.', link: 'https://github.com/albertcheong/albertcheong.github.io' }
-    ];
-
-    return `
-        <div class="h-screen flex flex-col items-center justify-center text-navy px-8">
-            <h2 class="text-4xl sm:text-6xl lg:text-8xl font-bold mb-12 animate-fade-in-up animation-delay-200">
-                Projects
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full animate-fade-in animation-delay-400">
-                ${projects.map((project) => 
-                        renderProjectCard(project)
-                    ).join('')}
-            </div>
-        </div>
-    `;
-}
-
-function renderProjectCard(project: Project): string {
-    return `
-        <div class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300}">
-            <h3 class="text-xl sm:text-2xl font-bold mb-2">${project.name}</h3>
-            <p class="text-gray-600 mb-4 text-sm sm:text-base">${project.description}</p>
-            <a href="${project.link}" class="text-navy underline hover:text-navy/80 transition-colors">View Project →</a>
-        </div>
-    `;
-}
-
-function renderContactSlide(): string {
-    const socialLinks = [
-        { href: 'mailto:aelberth.cheong@outlook.com', icon: 'fa-envelope', label: 'Email' },
-        { href: 'https://github.com/albertcheong', icon: 'fa-github', label: 'GitHub' },
-        { href: 'https://linkedin.com/in/aelberthcheong', icon: 'fa-linkedin', label: 'LinkedIn' },
-    ];
-
-    return `
-        <div class="h-screen flex flex-col items-center justify-center text-navy px-8">
-            <h2 class="text-4xl sm:text-6xl lg:text-8xl font-bold mb-12 animate-fade-in-up animation-delay-200">
-                Contact Me
-            </h2>
-            <div class="flex flex-row gap-8 sm:gap-16 text-2xl animate-fade-in-up animation-delay-400">
-                ${socialLinks
-                    .map(
-                        (link) => `
-                    <a href="${link.href}" 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       class="hover:-translate-y-1 active:translate-y-0 active:text-navy/50 transition-all duration-200 ease-in-out">
-                        <i class="text-4xl sm:text-5xl ${link.icon === 'fa-envelope' ? 'fa-solid' : 'fa-brands'} ${link.icon}"></i>
-                    </a>
-                `
-                    )
-                    .join('')}
-            </div>
-        </div>
-    `;
-}
-
+let currentSlide = 0;
 
 function App(): void {
-    const app = document.querySelector<HTMLDivElement>('#app')!;
+    const app = document.querySelector<HTMLDivElement>("#app")!;
     app.innerHTML = `
-        <div id="slide-container"></div>
-        <div id="slide-indicators" class="fixed bottom-8 left-1/2 -translate-x-1/2 text-xl z-10"></div>
+        <div class="h-screen flex flex-col">
+            <div class="flex-1 flex items-center justify-center p-5 overflow-y-hidden">
+                ${renderSlides(currentSlide)}
+            </div>
+            ${renderDots()}
+        </div>
     `;
 
-    const slideManager = new SlideManager();
-    slideManager.render();
+    setupEventListeners();
 }
 
 App();
