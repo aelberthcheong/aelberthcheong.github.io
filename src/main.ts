@@ -291,12 +291,12 @@ function setupEventListeners(): void {
 
     document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowRight") {
-            if (currentSlide >= slides.length - 1) return;
-            goToSlide(currentSlide + 1);
+            let index = clamp(currentSlide + 1, 0, slides.length - 1);
+            goToSlide(index);
         } 
         else if (e.key === "ArrowLeft") {
-            if (currentSlide <= 0) return;
-            goToSlide(currentSlide - 1);
+            let index = clamp(currentSlide - 1, 0, slides.length - 1);
+            goToSlide(index);
         }
     });
 
@@ -307,6 +307,50 @@ function setupEventListeners(): void {
             goToSlide(index);
         }
     }
+}
+
+function clamp(value: number, min: number, max: number): number {
+    if (value < min) return min;
+    if (value > max) return max;
+    return value; 
+}
+
+function detectSwipe(elementId: string) {
+    const touchsurface = document.getElementById(elementId);
+    if (!touchsurface) return;
+
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+
+    const threshold = 150;
+    const restraint = 100;
+
+    touchsurface.addEventListener('touchstart', (e: TouchEvent) => {
+        const touchObj = e.changedTouches[0];
+        startX = touchObj.screenX;
+        startY = touchObj.screenY;
+    }, false);
+
+    touchsurface.addEventListener('touchend', (e: TouchEvent) => {
+        const touchObj = e.changedTouches[0];
+        endX = touchObj.screenX;
+        endY = touchObj.screenY;
+
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+
+        if (Math.abs(deltaX) >= threshold && Math.abs(deltaY) <= restraint) {
+            if (deltaX > 0) {
+                let index = clamp(currentSlide - 1, 0, slides.length - 1);
+                goToSlide(index);
+            } else {
+                let index = clamp(currentSlide + 1, 0, slides.length - 1);
+                goToSlide(index);
+            }
+        }
+    }, false);
 }
 
 let currentSlide = 0;
@@ -321,7 +365,7 @@ function App(): void {
             ${renderDots()}
         </div>
     `;
-
+    detectSwipe("app");
     setupEventListeners();
 }
 
