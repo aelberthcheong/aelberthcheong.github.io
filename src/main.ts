@@ -299,9 +299,10 @@ let currentSlide = 0;
 
 function App(): void {
     const app = document.querySelector<HTMLDivElement>("#app")!;
+    document.body.style.overflow = 'hidden';
     app.innerHTML = `
-        <div class="h-screen flex flex-col">
-            <div class="flex-1 flex items-center justify-center p-5 overflow-y-hidden">
+        <div class="h-dvh flex flex-col overflow-hidden">
+            <div class="flex-1 flex items-center justify-center p-5">
                 ${renderSlides(currentSlide)}
             </div>
             ${renderDots()}
