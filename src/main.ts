@@ -18,6 +18,21 @@ const slides: Slide[] = [
                               sm:text-3xl">
                         A Full Stack Developer
                     </p>
+                    <a 
+                        href="/assets/Aelberth_Cheong_CV_2025.pdf"
+                        download
+                        class="mt-16 inline-flex items-center gap-3
+                               rounded-xl bg-navy px-6 py-3
+                               text-white font-semibold text-lg
+                               shadow-[0_4px_0_0_#d1d5db]
+                               transition-all duration-150 ease-in-out
+                               hover:-translate-y-1 hover:shadow-[0_6px_0_0_#d1d5db]
+                               active:translate-y-1 active:shadow-[0_2px_0_0_#d1d5db]
+                               focus:outline-none focus-visible:ring-2
+                               focus-visible:ring-navy/50">
+                        <i class="fas fa-file-alt"></i>
+                        Download CV
+                    </a>
                 </div>
             `;
         }
