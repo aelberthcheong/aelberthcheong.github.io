@@ -9,32 +9,61 @@
 </head>
 
 <body>
-    <video autoplay muted loop id="background-video">
+    <video autoplay muted loop playsinline preload="metadata" id="background-video">
         <source src="/src/assets/background.mp4" type="video/mp4">
     </video>
+    <main>
+        <section id="home">
+            <h1>Home</h1>
+            <hr />
+            <br>
+            <p>
+                Hi, i'm Aelberth Cheong -- A Full Stack Developer
+            </p>
+        </section>
+        <section id="about">
+            <h1>About Me</h1>
+            <hr />
+            <br>
+            <p>I like building cool things</p>
+        </section>
+        <section id="projects">
+            <h1>Projects</h1>
+            <hr />
+            <br>
+            <p>Here are some projects i've worked on</p>
+        </section>
+        <section id="contacts">
+            <h1>Contacts</h1>
+            <hr />
+            <br>
+            <p>
+                Email: aelberth.cheong@outlook.com <br>
+                Github: https://github.com/aelberthcheong <br>
+                Linkedin: https://linkedin.com/in/aelberthcheong<br>
+            </p>
+        </section>
+    </main>
     <nav class="navigation">
         <ul>
             <li>
-                <a href="#home" alt="Home" aria-label="Home navigation icon"></a>
+                <span class="tooltip">Home</span>
+                <a href="#home" aria-label="Home navigation icon"></a>
             </li>
-            <li><a href="#about" alt="About Me" aria-label="About Me navigation icon">
-                </a></li>
-            <li><a href="#projects" alt="Projects" aria-label="Projects navigation icon">
-                </a></li>
-            <li><a href="#contacts" alt="Contacts" aria-label="Contacts navigtaion icon">
-                </a></li>
+            <li>
+                <span class="tooltip">About Me</span>
+                <a href="#about" aria-label="About Me navigation icon"></a>
+            </li>
+            <li>
+                <span class="tooltip">Projects</span>
+                <a href="#projects" aria-label="Projects navigation icon"></a>
+            </li>
+            <li>
+                <span class="tooltip">Contacts</span>
+                <a href="#contacts" aria-label="Contacts navigtaion icon"></a>
+            </li>
         </ul>
     </nav>
-    <header></header>
-    <main>
-        <div>
-            <section>
-                <h1>Hi, I'm Aelberth Cheong</h1>
-                <p>A Full Stack Developer</p>
-            </section>
-        </div>
-    </main>
-    <footer></footer>
 </body>
 
 </html>

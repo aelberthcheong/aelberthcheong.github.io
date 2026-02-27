@@ -34,7 +34,7 @@
     font-family: "Inter", sans-serif;
     font-weight: 400;
     line-height: 1.5;
-    color: white;
+    color: rgba(255 255 255 / 0.85);
 
     @media (prefers-reduced-motion: no-preference) {
         :has(:target) {
@@ -59,21 +59,70 @@
     height: 100%;
     object-fit: cover;
     z-index: -1;
+    pointer-events: none;
+}
+
+body {
+
+    /* saat pertama load, hash url tidak ada maka disini kita pastikan home itu yg diselected */
+    &:not(:has(:target)) a[href="#home"] {
+        background-color: #FFFFFF;
+    }
+
+    &:has(#home:target) a[href="#home"],
+    &:has(#about:target) a[href="#about"],
+    &:has(#projects:target) a[href="#projects"],
+    &:has(#contacts:target) a[href="#contacts"] {
+        background-color: #FFFFFF;
+    }
+
+    &:not(:has(#home:target)) #home,
+    &:not(:has(#about:target)) #about,
+    &:not(:has(#projects:target)) #projects,
+    &:not(:has(#contacts:target)) #contacts {
+        display: none;
+    }
+}
+
+main {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+section {
+    background: hsl(0 360 0 / 0.2);
+    border: 2px solid rgba(255 255 255 / 0.2);
+    border-radius: 10px;
+    box-shadow:
+        0 8px 32px rgba(0 0 0 / 0.35),
+        0 1px 0 rgba(255 255 255 / 0.12) inset,
+        0 -1px 0 rgba(0 0 0 / 0.2) inset;
+    width: min(860px, 90%);
+    padding: 48px;
 }
 
 .navigation {
-    --navigation-items-gap: 12px;
+    --navigation-items-gap: 16px;
     --icon-width: 48px;
     --icon-height: 48px;
-    --icon-color: oklch(100% 0 0 / 0.4);
+    --icon-color: rgba(255 255 255 / 0.65);
 
     position: fixed;
     left: 50%;
     bottom: 24px;
     transform: translateX(-50%);
-    z-index: 100vh;
+    z-index: 100;
     padding: 8px 20px;
     width: max-content;
+    background: hsl(0 360 0 / 0.2);
+    border: 2px solid rgba(255 255 255 / 0.2);
+    border-radius: 100vh;
+    box-shadow:
+        0 8px 32px rgba(0 0 0 / 0.35),
+        0 1px 0 rgba(255 255 255 / 0.12) inset,
+        0 -1px 0 rgba(0 0 0 / 0.2) inset;
 
     & ul {
         display: flex;
@@ -82,7 +131,37 @@
         column-gap: var(--navigation-items-gap);
     }
 
-    & a {
+    & li {
+        position: relative;
+    }
+
+    & .tooltip {
+        position: absolute;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%) translateY(8px) scale(0.65);
+
+        padding: 6px 12px;
+        border-radius: 6px;
+        background: rgba(0 0 0 / 0.4);
+        color: white;
+        font-size: 14px;
+        white-space: nowrap;
+
+        opacity: 0;
+        pointer-events: none;
+
+        transition:
+            opacity 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    & li:hover .tooltip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    & li>a {
         &[href="#home"] {
             --mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='48' height='48' viewBox='0 0 64 64'%3E%3Cpath d='M 32 8 C 31.08875 8 30.178047 8.3091875 29.435547 8.9296875 L 8.8007812 26.171875 C 8.0357812 26.810875 7.7634844 27.925203 8.2714844 28.783203 C 8.9184844 29.875203 10.35025 30.088547 11.28125 29.310547 L 31.677734 12.269531 C 31.864734 12.113531 32.135266 12.113531 32.322266 12.269531 L 52.71875 29.3125 C 53.09275 29.6255 53.546047 29.777344 53.998047 29.777344 C 54.693047 29.777344 55.382672 29.416656 55.763672 28.722656 C 56.228672 27.874656 55.954891 26.803594 55.212891 26.183594 L 52 23.498047 L 52 15 C 52 13.895 51.105 13 50 13 L 48 13 C 46.895 13 46 13.895 46 15 L 46 18.484375 L 34.564453 8.9296875 C 33.821953 8.3091875 32.91125 8 32 8 z M 32 16 L 12 32.705078 L 12 47 C 12 49.761 14.239 52 17 52 L 47 52 C 49.761 52 52 49.761 52 47 L 52 32.705078 L 32 16 z M 28 32 L 36 32 C 37.105 32 38 32.895 38 34 L 38 48 L 26 48 L 26 34 C 26 32.895 26.895 32 28 32 z'%3E%3C/path%3E%3C/svg%3E");
         }
@@ -99,10 +178,27 @@
             --mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='48' height='48' viewBox='0 0 64 64'%3E%3Cpath d='M 20 11 C 16.686 11 14 13.686 14 17 L 14 47 C 14 50.314 16.686 53 20 53 L 48 53 C 49.105 53 50 52.105 50 51 C 50 50.225188 49.556035 49.560676 48.912109 49.228516 L 48.917969 49.224609 C 48.917969 49.224609 47 48.445625 47 46.515625 C 47 44.621625 48.199219 43.845703 48.199219 43.845703 L 48.167969 43.837891 C 49.277417 42.920723 50 41.55158 50 40 L 50 17 C 50 13.686 47.314 11 44 11 L 20 11 z M 20 15 L 22 15 L 22 41 C 19.027 41 18 41.535156 18 41.535156 L 18 17 C 18 15.895 18.895 15 20 15 z M 34.017578 20.013672 C 35.968578 20.013672 37.548828 21.757156 37.548828 23.910156 C 37.548828 26.063156 35.968578 27.808594 34.017578 27.808594 C 32.066578 27.808594 30.484375 26.063156 30.484375 23.910156 C 30.484375 21.757156 32.067578 20.013672 34.017578 20.013672 z M 34 29.4375 C 35.716 29.4375 37.457719 29.808234 39.261719 31.115234 C 40.098719 31.721234 41.564453 33.229844 41.564453 34.964844 C 41.564453 35.899844 40.605641 36.011719 40.306641 36.011719 L 27.693359 36.011719 C 27.394359 36.011719 26.435547 35.899844 26.435547 34.964844 C 26.435547 33.230844 27.901281 31.721234 28.738281 31.115234 C 30.542281 29.808234 32.284 29.4375 34 29.4375 z M 20 45 L 43.363281 45 C 43.150753 45.537803 43 46.190793 43 47 C 43 47.805729 43.261883 48.458893 43.626953 49 L 20 49 C 18.895 49 18 48.105 18 47 C 18 45.895 18.895 45 20 45 z'%3E%3C/path%3E%3C/svg%3E");
         }
 
+        &:hover {
+            transform: translateY(-6px) scale(1.12);
+        }
+
+        &:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        &:active {
+            transform: translateY(-2px) scale(0.96);
+            transition-duration: 0.1s;
+        }
+
         display: block;
         width: var(--icon-width);
         height: var(--icon-height);
+        text-decoration: none;
         background-color: var(--icon-color);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background-color 0.2s ease;
         -webkit-mask-size: contain;
         mask-size: contain;
         -webkit-mask-repeat: no-repeat;
@@ -110,4 +206,8 @@
         -webkit-mask-image: var(--mask);
         mask-image: var(--mask);
     }
+}
+
+hr {
+    color: rgba(255 255 255 / 0.2);
 }
