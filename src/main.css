@@ -69,10 +69,6 @@ body {
         background-color: #FFFFFF;
     }
 
-    &:not(:has(:target)) #home {
-        display: block;
-    }
-
     &:has(#home:target) a[href="#home"],
     &:has(#about:target) a[href="#about"],
     &:has(#projects:target) a[href="#projects"],
@@ -86,6 +82,11 @@ body {
     &:not(:has(#contacts:target)) #contacts {
         display: none;
     }
+
+    &:not(:has(:target)) #home {
+        display: block;
+    }
+
 }
 
 main {
