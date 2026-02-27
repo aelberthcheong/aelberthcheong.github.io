@@ -1,0 +1,12 @@
+{
+    "name": "aelberthcheong.dev",
+    "version": "0.1.0",
+    "author": "aelberth.cheong@outlook.com",
+    "scripts": {
+        "fmt": "prettier --write .",
+        "fmt:check": "prettier --check ."
+    },
+    "devDependencies": {
+        "prettier": "^3.8.1"
+    }
+}

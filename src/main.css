@@ -1,0 +1,113 @@
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/src/assets/Inter-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("/src/assets/Inter-Medium.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/src/assets/Inter-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("/src/assets/Inter-Bold.woff2") format("woff2");
+}
+
+:root {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    color: white;
+
+    @media (prefers-reduced-motion: no-preference) {
+        :has(:target) {
+            scroll-behavior: smooth;
+            scroll-padding-top: 3rem;
+        }
+    }
+}
+
+/* reset style bawaan browser */
+:where(*, *::before, *::after) {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: inherit;
+}
+
+#background-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.navigation {
+    --navigation-items-gap: 12px;
+    --icon-width: 48px;
+    --icon-height: 48px;
+    --icon-color: oklch(100% 0 0 / 0.4);
+
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 100vh;
+    padding: 8px 20px;
+    width: max-content;
+
+    & ul {
+        display: flex;
+        flex-direction: row;
+        list-style-type: none;
+        column-gap: var(--navigation-items-gap);
+    }
+
+    & a {
+        &[href="#home"] {
+            --mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='48' height='48' viewBox='0 0 64 64'%3E%3Cpath d='M 32 8 C 31.08875 8 30.178047 8.3091875 29.435547 8.9296875 L 8.8007812 26.171875 C 8.0357812 26.810875 7.7634844 27.925203 8.2714844 28.783203 C 8.9184844 29.875203 10.35025 30.088547 11.28125 29.310547 L 31.677734 12.269531 C 31.864734 12.113531 32.135266 12.113531 32.322266 12.269531 L 52.71875 29.3125 C 53.09275 29.6255 53.546047 29.777344 53.998047 29.777344 C 54.693047 29.777344 55.382672 29.416656 55.763672 28.722656 C 56.228672 27.874656 55.954891 26.803594 55.212891 26.183594 L 52 23.498047 L 52 15 C 52 13.895 51.105 13 50 13 L 48 13 C 46.895 13 46 13.895 46 15 L 46 18.484375 L 34.564453 8.9296875 C 33.821953 8.3091875 32.91125 8 32 8 z M 32 16 L 12 32.705078 L 12 47 C 12 49.761 14.239 52 17 52 L 47 52 C 49.761 52 52 49.761 52 47 L 52 32.705078 L 32 16 z M 28 32 L 36 32 C 37.105 32 38 32.895 38 34 L 38 48 L 26 48 L 26 34 C 26 32.895 26.895 32 28 32 z'%3E%3C/path%3E%3C/svg%3E");
+        }
+
+        &[href="#about"] {
+            --mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='48' height='48' viewBox='0 0 64 64'%3E%3Cpath d='M53.66 47.73a23.37 23.37 0 0 0-5.04-7.47 23.48 23.48 0 0 0-7.47-5.04l-.07-.03C44.97 32.37 47.5 27.79 47.5 22.62 47.5 14.07 40.56 7.12 32 7.12S16.5 14.07 16.5 22.62c0 5.17 2.53 9.75 6.42 12.57l-.07.03a23.48 23.48 0 0 0-7.47 5.04 23.48 23.48 0 0 0-5.04 7.47A23.23 23.23 0 0 0 8.5 56.36a.5.5 0 0 0 .5.51h3.75c.27 0 .49-.22.5-.49.12-4.82 2.06-9.34 5.49-12.77 3.54-3.54 8.25-5.49 13.26-5.49s9.72 1.95 13.26 5.49c3.43 3.43 5.37 7.95 5.49 12.77.01.27.23.49.5.49H55a.5.5 0 0 0 .5-.51 23.23 23.23 0 0 0-1.84-8.63zM32 33.37c-2.87 0-5.57-1.12-7.6-3.15A10.69 10.69 0 0 1 21.25 22.62c0-2.87 1.12-5.57 3.15-7.6A10.69 10.69 0 0 1 32 11.87c2.87 0 5.57 1.12 7.6 3.15a10.69 10.69 0 0 1 3.15 7.6c0 2.87-1.12 5.57-3.15 7.6A10.69 10.69 0 0 1 32 33.37z'%3E%3C/path%3E%3C/svg%3E");
+        }
+
+        &[href="#projects"] {
+            --mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='48' height='48' viewBox='0 0 64 64'%3E%3Cpath d='M 16 12 C 12.691 12 10 14.691 10 18 L 10 41.347656 L 10 42.611328 L 14.117188 29.863281 C 15.442187 25.758281 19.232875 23 23.546875 23 L 52.025391 23 C 52.703391 23 53.365 23.087094 54 23.246094 L 54 22 C 54 18.691 51.309 16 48 16 L 29.103516 16 C 28.198516 16 27.312422 15.689047 26.607422 15.123047 L 24.894531 13.753906 C 23.481531 12.623906 21.706484 12 19.896484 12 L 16 12 z M 23.546875 27 C 20.974875 27 18.715781 28.645797 17.925781 31.091797 L 12.246094 48.673828 C 13.275094 49.501828 14.58 50 16 50 L 46.529297 50 C 48.720297 50 50.636875 48.596859 51.296875 46.505859 L 55.8125 32.203125 C 56.1955 30.992125 55.975609 29.658766 55.224609 28.634766 C 54.894609 28.184766 53.856391 27 52.025391 27 L 23.546875 27 z'%3E%3C/path%3E%3C/svg%3E");
+        }
+
+        &[href="#contacts"] {
+            --mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='48' height='48' viewBox='0 0 64 64'%3E%3Cpath d='M 20 11 C 16.686 11 14 13.686 14 17 L 14 47 C 14 50.314 16.686 53 20 53 L 48 53 C 49.105 53 50 52.105 50 51 C 50 50.225188 49.556035 49.560676 48.912109 49.228516 L 48.917969 49.224609 C 48.917969 49.224609 47 48.445625 47 46.515625 C 47 44.621625 48.199219 43.845703 48.199219 43.845703 L 48.167969 43.837891 C 49.277417 42.920723 50 41.55158 50 40 L 50 17 C 50 13.686 47.314 11 44 11 L 20 11 z M 20 15 L 22 15 L 22 41 C 19.027 41 18 41.535156 18 41.535156 L 18 17 C 18 15.895 18.895 15 20 15 z M 34.017578 20.013672 C 35.968578 20.013672 37.548828 21.757156 37.548828 23.910156 C 37.548828 26.063156 35.968578 27.808594 34.017578 27.808594 C 32.066578 27.808594 30.484375 26.063156 30.484375 23.910156 C 30.484375 21.757156 32.067578 20.013672 34.017578 20.013672 z M 34 29.4375 C 35.716 29.4375 37.457719 29.808234 39.261719 31.115234 C 40.098719 31.721234 41.564453 33.229844 41.564453 34.964844 C 41.564453 35.899844 40.605641 36.011719 40.306641 36.011719 L 27.693359 36.011719 C 27.394359 36.011719 26.435547 35.899844 26.435547 34.964844 C 26.435547 33.230844 27.901281 31.721234 28.738281 31.115234 C 30.542281 29.808234 32.284 29.4375 34 29.4375 z M 20 45 L 43.363281 45 C 43.150753 45.537803 43 46.190793 43 47 C 43 47.805729 43.261883 48.458893 43.626953 49 L 20 49 C 18.895 49 18 48.105 18 47 C 18 45.895 18.895 45 20 45 z'%3E%3C/path%3E%3C/svg%3E");
+        }
+
+        display: block;
+        width: var(--icon-width);
+        height: var(--icon-height);
+        background-color: var(--icon-color);
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-image: var(--mask);
+        mask-image: var(--mask);
+    }
+}
