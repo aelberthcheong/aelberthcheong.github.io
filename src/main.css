@@ -66,8 +66,11 @@ body {
 
     /* saat pertama load, hash url tidak ada maka disini kita pastikan home itu yg diselected */
     &:not(:has(:target)) a[href="#home"] {
-        display: static;
         background-color: #FFFFFF;
+    }
+
+    &:not(:has(:target)) #home {
+        display: static;
     }
 
     &:has(#home:target) a[href="#home"],
