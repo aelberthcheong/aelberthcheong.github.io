@@ -70,7 +70,7 @@ body {
     }
 
     &:not(:has(:target)) #home {
-        display: static;
+        display: block;
     }
 
     &:has(#home:target) a[href="#home"],
