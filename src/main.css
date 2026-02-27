@@ -3,7 +3,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url("/src/assets/Inter-Regular.woff2") format("woff2");
+    src: url("./assets/Inter-Regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -11,7 +11,7 @@
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: url("/src/assets/Inter-Medium.woff2") format("woff2");
+    src: url("./assets/Inter-Medium.woff2") format("woff2");
 }
 
 @font-face {
@@ -19,7 +19,7 @@
     font-style: normal;
     font-weight: 600;
     font-display: swap;
-    src: url("/src/assets/Inter-SemiBold.woff2") format("woff2");
+    src: url("./assets/Inter-SemiBold.woff2") format("woff2");
 }
 
 @font-face {
@@ -27,7 +27,7 @@
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url("/src/assets/Inter-Bold.woff2") format("woff2");
+    src: url("./assets/Inter-Bold.woff2") format("woff2");
 }
 
 :root {
@@ -66,6 +66,7 @@ body {
 
     /* saat pertama load, hash url tidak ada maka disini kita pastikan home itu yg diselected */
     &:not(:has(:target)) a[href="#home"] {
+        display: static;
         background-color: #FFFFFF;
     }
 
