@@ -62,31 +62,31 @@
     pointer-events: none;
 }
 
+/* secara default semua section itu hidden */
+:is(#home, #about, #projects, #contacts) {
+    display: none;
+}
+
 body {
 
-    /* saat pertama load, hash url tidak ada maka disini kita pastikan home itu yg diselected */
-    &:not(:has(:target)) a[href="#home"] {
-        background-color: #FFFFFF;
-    }
-
-    &:has(#home:target) a[href="#home"],
-    &:has(#about:target) a[href="#about"],
-    &:has(#projects:target) a[href="#projects"],
-    &:has(#contacts:target) a[href="#contacts"] {
-        background-color: #FFFFFF;
-    }
-
-    &:not(:has(#home:target)) #home,
-    &:not(:has(#about:target)) #about,
-    &:not(:has(#projects:target)) #projects,
-    &:not(:has(#contacts:target)) #contacts {
-        display: none;
+    &:has(#home:target) #home,
+    &:has(#about:target) #about,
+    &:has(#projects:target) #projects,
+    &:has(#contacts:target) #contacts {
+        display: block;
     }
 
     &:not(:has(:target)) #home {
         display: block;
     }
 
+    &:has(#home:target) a[href="#home"],
+    &:has(#about:target) a[href="#about"],
+    &:has(#projects:target) a[href="#projects"],
+    &:has(#contacts:target) a[href="#contacts"],
+    &:not(:has(:target)) a[href="#home"] {
+        background-color: #FFFFFF;
+    }
 }
 
 main {
