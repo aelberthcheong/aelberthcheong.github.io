@@ -247,3 +247,17 @@ a {
     from { transform: translate(-70px, 40px) rotate(-22deg); }
     to   { transform: translate(45px, -50px) rotate(15deg); }
 }
+
+svg#background > path {
+    stroke: #FFFFFF4D;
+    stroke-dasharray: 27556.166015625;
+    stroke-dashoffset: 27556.166015625;
+    animation: draw 20s ease-in-out infinite;
+}
+
+@keyframes draw {
+    0%   { stroke-dashoffset: 27556.166015625; }
+    45%  { stroke-dashoffset: 0; }
+    55%  { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 27556.166015625; }
+}
