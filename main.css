@@ -91,6 +91,11 @@ article h1:first-child {
     margin-block-start: 0;
 }
 
+#logo {
+    font-size: 2em;
+    user-select: none;
+}
+
 header, footer {
     display: flex;
     flex-direction: row;
