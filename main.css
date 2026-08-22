@@ -252,7 +252,7 @@ svg#background > path {
     stroke: #FFFFFF4D;
     stroke-dasharray: 27556.166015625;
     stroke-dashoffset: 27556.166015625;
-    animation: draw 20s ease-in-out infinite;
+    animation: draw 90s linear infinite;
 }
 
 @keyframes draw {
