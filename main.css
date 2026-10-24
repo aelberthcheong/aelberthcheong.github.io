@@ -25,7 +25,6 @@
 html, body {
     margin: 0;
     height: 100%;
-    overflow: hidden;
     overscroll-behavior: none;
     scrollbar-width: none;
 }
@@ -167,59 +166,6 @@ a {
     main {
         overflow: visible;
     }
-}
-
-.cat-container {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1rem;
-    overflow: hidden;
-}
-
-.cat-card img {
-    width: 260px;
-    display: block;
-    user-select: none;
-}
-
-.cat-card {
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    animation-timing-function: ease-in-out;
-}
-
-.cat-1 {
-    align-self: flex-start;
-    animation-name: float-1;
-    animation-duration: 3.7s;
-}
-
-.cat-2 {
-    align-self: flex-end;
-    animation-name: float-2;
-    animation-duration: 5.1s;
-}
-
-.cat-3 {
-    align-self: flex-start;
-    margin-left: 30px;
-    animation-name: float-3;
-    animation-duration: 4.3s;
-}
-
-.cat-4 {
-    align-self: flex-end;
-    margin-right: 40px;
-    animation-name: float-4;
-    animation-duration: 4.8s;
-}
-
-.cat-5 {
-    align-self: center;
-    animation-name: float-5;
-    animation-duration: 6.2s;
 }
 
 @keyframes float-1 {
